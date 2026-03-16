@@ -12,12 +12,10 @@ const course = useCourse();
                 <h2>Chapters</h2>
                 <ul>
                     <li v-for="chapter in course.chapters" :key="chapter.slug">
-                        <NuxtLink :to="`/course/chapter/${chapter.slug}/lesson/${chapter.lessons[0]?.slug}`">
-                            {{ chapter.title }}
-                        </NuxtLink>
+                        {{ chapter.title }}
                         <p>{{ chapter.description }}</p>
                         <ul v-for="lesson in chapter.lessons" :key="lesson.slug">
-                            <NuxtLink :to="`/course/chapter/${chapter.slug}/lesson/${lesson.slug}`">
+                            <NuxtLink :to="lesson.path">
                                 {{ lesson.title }}
                             </NuxtLink>
                             <p>{{ lesson.description }}</p>
@@ -25,7 +23,7 @@ const course = useCourse();
                     </li>
                 </ul>
             </div>
-            <div id="lessons" v-if="$route.params.LessonSlug">
+            <div id="lessons">
                 <NuxtPage />
             </div>
         </div>
@@ -35,6 +33,12 @@ const course = useCourse();
 </template>
 
 <style scoped>
+.router-link-active {
+    text-decoration: underline !important;
+    color: #30309f !important;
+
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -76,19 +80,25 @@ const course = useCourse();
 
 #chapters {
     width: 30%;
+    max-width: 25%;
     text-align: left;
+
     a {
         text-decoration: none;
         color: #000;
     }
+
     p {
         font-size: 0.9em;
         font-weight: normal;
         margin-left: 5%;
+        position: relative;
     }
+
     li {
         margin-left: 10%;
         font-weight: bold;
+
         ul {
             margin-left: 10%;
         }

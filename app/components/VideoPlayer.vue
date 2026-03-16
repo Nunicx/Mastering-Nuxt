@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 defineProps({
-    videoId: { type: String, required: true },
+    videoId: { type: Number, required: true },
 });
 </script>
 
