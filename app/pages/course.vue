@@ -1,9 +1,17 @@
-<script setup lang="ts">
+<script setup>
 const course = useCourse();
+definePageMeta({
+    layout: 'default',
+})
+
+// const resetError = async (error) => {
+//     await navigateTo('/course/chapter/1/lesson/1');
+//     error.value = null
+//     clearError();
+// }
 </script>
 
 <template>
-    <div id="course_wrapper">
         <h1>Course: <strong>Mastering Nuxt</strong></h1>
         <div id="content">
             <div id="chapters">
@@ -22,11 +30,17 @@ const course = useCourse();
                 </ul>
             </div>
             <div id="lessons">
-                <NuxtPage />
+                <NuxtErrorBoundary>
+                    <NuxtPage />
+                    <template #error="{ error }">
+                        <p>Something went wrong: {{ error }}</p>
+                        <button @click="resetError(error)">Retry</button>
+                    </template>
+                </NuxtErrorBoundary>
+                
             </div>
         </div>
 
-    </div>
 
 </template>
 
@@ -37,19 +51,7 @@ const course = useCourse();
 
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-}
-
 #course_wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100vh;
-    height: 100%;
-    text-align: center;
 
     h1 {
         margin-top: 1em;

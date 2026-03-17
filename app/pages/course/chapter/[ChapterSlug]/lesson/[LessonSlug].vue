@@ -1,6 +1,30 @@
-<script setup>//Por que tengo que importarlos?
+<script setup>
+import { definePage } from 'vue-router/dist/experimental/index.js';
+
+//Por que tengo que importarlos?
 const course = useCourse();
 const route = useRoute();
+
+definePageMeta({
+    validate({params}) {
+        const course= useCourse();
+
+        const chapter = course.chapters.find(
+            (chapter) => chapter.slug === params.ChapterSlug
+        );
+
+        const lesson = chapter.lessons.find(
+            (lesson) => lesson.slug === params.LessonSlug
+        );
+
+        if(!chapter || !lesson){
+            throw createError({
+                statusCode: 404,
+                statusMessage: 'Chapter or lesson not found'
+            })
+        }
+    }
+});
 
 const chapter = computed(() => {
     return course.chapters.find(
@@ -24,7 +48,6 @@ useHead({
 
 
 // El curso lo explicaba con un array y no me salía, asi que lo hice con un objeto:
-
 const progress = useLocalStorage('progress', {});                       //Almacenamos en localStorage el progreso en un objeto
 
 const lessonKey = computed(() => {
@@ -45,6 +68,13 @@ const toggleComplete = () => {
 //Vueuse para localStorage:
 // npm i @vueuse/nuxt @vueuse/core
 
+// if(route.params.LessonSlug == '2' && route.params.ChapterSlug == '2') {
+//     throw createError({
+//          fatal:true,
+//          message: 'You have reached the end of the course'
+//     });
+// }
+
 </script>
 
 <template>
@@ -62,7 +92,7 @@ const toggleComplete = () => {
             <VideoPlayer v-if="lesson.videoId" :videoId="+lesson.videoId" :key="lesson.videoId" />
             <p v-else>No video</p>
         </div>
-            <LessonCompleteButton :model-value="isLessonComplete" @update:model-value="toggleComplete" />
+            <LessonCompleteButton :model-value="isLessonComplete" @update:model-value="() => { toggleComplete; throw createError('Could not update')}" />
 
     </div>
 </template>
