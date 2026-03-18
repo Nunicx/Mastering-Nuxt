@@ -12,7 +12,13 @@ definePageMeta({
 </script>
 
 <template>
-        <h1>Course: <strong>Mastering Nuxt</strong></h1>
+
+    <div class="all_course_wrapper">
+        <UserCard />
+        <NuxtLink to="/" id="go_back">
+            <NuxtImg src="/img/back.png" />{{ course.title }}
+        </NuxtLink>
+        <h1>Course: <strong>{{ course.title }}</strong></h1>
         <div id="content">
             <div id="chapters">
                 <h2>Chapters</h2>
@@ -37,10 +43,10 @@ definePageMeta({
                         <button @click="resetError(error)">Retry</button>
                     </template>
                 </NuxtErrorBoundary>
-                
+
             </div>
         </div>
-
+    </div>
 
 </template>
 
@@ -109,5 +115,22 @@ definePageMeta({
     display: block;
     width: 70%;
     min-height: 80vh;
+}
+
+#go_back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    text-decoration: none !important;
+    color: #000 !important;
+
+    img {
+        width: 24px;
+        filter: opacity(0.5);
+    }
 }
 </style>

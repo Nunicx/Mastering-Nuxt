@@ -1,4 +1,5 @@
 <script setup>
+const user = useSupabaseUser()
 const title = "Home"
 definePageMeta({
   layout: "default"
@@ -10,6 +11,7 @@ definePageMeta({
     <h1>{{ title }}</h1>
     <p>Bienvenido a mi página con Nuxt</p>
     <NuxtLink to="/course">Ir al curso</NuxtLink>
+    <NuxtLink to="/login" v-if="!user">Iniciar sesión</NuxtLink>
   </div>
 </template>
 
@@ -35,7 +37,8 @@ a {
   padding: 10px;
   background-color: #ccc;
   border-radius: 12px;
-  &:hover{
+
+  &:hover {
     background-color: #333;
     color: #fff;
   }

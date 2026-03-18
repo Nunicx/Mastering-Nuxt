@@ -5,10 +5,13 @@
 </template>
 
 <style>
-body,html{
+body,
+html {
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
 }
+
 .app_wrapper {
     display: flex;
     flex-direction: column;

@@ -1,29 +1,32 @@
 <script setup>
-import { definePage } from 'vue-router/dist/experimental/index.js';
-
-//Por que tengo que importarlos?
 const course = useCourse();
 const route = useRoute();
 
+
 definePageMeta({
-    validate({params}) {
-        const course= useCourse();
+    middleware: [
+        function ({ params }, from) {
+            const course = useCourse();
 
-        const chapter = course.chapters.find(
-            (chapter) => chapter.slug === params.ChapterSlug
-        );
+            const chapter = course.chapters.find(
+                (chapter) => chapter.slug === params.ChapterSlug
+            );
 
-        const lesson = chapter.lessons.find(
-            (lesson) => lesson.slug === params.LessonSlug
-        );
+            const lesson = chapter.lessons.find(
+                (lesson) => lesson.slug === params.LessonSlug
+            );
 
-        if(!chapter || !lesson){
-            throw createError({
-                statusCode: 404,
-                statusMessage: 'Chapter or lesson not found'
-            })
-        }
-    }
+            if (!chapter || !lesson) {
+                return abortNavigation(
+                    createError({
+                        statusCode: 404,
+                        statusMessage: 'Chapter or lesson not found'
+                    })
+                );
+            }
+        },
+        'auth'
+    ]
 });
 
 const chapter = computed(() => {
@@ -92,7 +95,8 @@ const toggleComplete = () => {
             <VideoPlayer v-if="lesson.videoId" :videoId="+lesson.videoId" :key="lesson.videoId" />
             <p v-else>No video</p>
         </div>
-            <LessonCompleteButton :model-value="isLessonComplete" @update:model-value="() => { toggleComplete; throw createError('Could not update')}" />
+        <LessonCompleteButton :model-value="isLessonComplete"
+            @update:model-value="() => { toggleComplete; throw createError('Could not update') }" />
 
     </div>
 </template>

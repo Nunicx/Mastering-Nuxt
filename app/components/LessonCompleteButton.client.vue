@@ -1,5 +1,6 @@
 <template>
-    <div class="lesson-complete" :style="{ backgroundColor: colorState }" @click="$emit('update:modelValue', !modelValue)">
+    <div class="lesson-complete" :style="{ backgroundColor: colorState }"
+        @click="$emit('update:modelValue', !modelValue)">
         {{ modelValue ? 'Complete' : 'Incomplete' }}
     </div>
 </template>
@@ -18,7 +19,7 @@ defineEmits(['update:modelValue'])
 
 const { modelValue } = toRefs(props)
 
-const colorState = computed(() => modelValue.value ? 'green' : 'red')
+const colorState = computed(() => modelValue.value ? '#285c4f' : '#bd2020')
 </script>
 
 <style scoped>
@@ -29,6 +30,7 @@ const colorState = computed(() => modelValue.value ? 'green' : 'red')
     padding: 10px;
     border-radius: 12px;
     cursor: pointer;
+    color: white;
 }
 
 p {

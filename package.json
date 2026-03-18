@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@nuxt/image": "^2.0.0",
+    "@nuxtjs/supabase": "^2.0.4",
     "@vueuse/core": "^14.2.1",
     "@vueuse/nuxt": "^14.2.1",
+    "netlify-cli": "^24.3.0",
     "nuxt": "^4.4.2",
     "vue": "^3.5.30",
     "vue-router": "^5.0.3"
