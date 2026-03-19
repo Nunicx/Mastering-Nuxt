@@ -4,13 +4,14 @@ const title = "Home"
 definePageMeta({
   layout: "default"
 })
+const firstLesson = await useFirstLesson();
 </script>
 
 <template>
   <div class="welcome_container">
     <h1>{{ title }}</h1>
     <p>Bienvenido a mi página con Nuxt</p>
-    <NuxtLink to="/course">Ir al curso</NuxtLink>
+    <NuxtLink :to="firstLesson.path">Ir al curso</NuxtLink>
     <NuxtLink to="/login" v-if="!user">Iniciar sesión</NuxtLink>
   </div>
 </template>

@@ -1,14 +1,15 @@
 <script setup>
-const course = useCourse();
-definePageMeta({
-    layout: 'default',
-})
+const firstLesson = await useFirstLesson();
+const course = await useCourse();
+// definePageMeta({
+//     layout: 'default',
+// })
 
-// const resetError = async (error) => {
-//     await navigateTo('/course/chapter/1/lesson/1');
-//     error.value = null
-//     clearError();
-// }
+const resetError = async (error) => {
+    await navigateTo(firstLesson.path);
+    error.value = null
+    clearError();
+}
 </script>
 
 <template>

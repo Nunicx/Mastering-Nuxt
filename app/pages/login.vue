@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 v-if="!user">Login to {{ title }}</h1>
+        <h1 v-if="!user">Login to {{ course.title }}</h1>
         <button v-if="!user" @click="login" :disabled="loading">
             {{ loading ? 'Cargando...' : 'Log in with Github' }}
         </button>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-const { title } = useCourse();
+const course = await useCourse();
 const supabase = useSupabaseClient();
 const loading = ref(false);
 const router = useRouter();
@@ -30,12 +30,15 @@ watchEffect(async () => {
 
 const login = async () => {
     loading.value = true;
-    const redirectTo = `${window.location.origin}${query.query?.redirectTo}`;
+
     try {
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'github',
             options: {
-                redirectTo
+                redirectTo: window.location.origin + '/login',
+                queryParams: {
+                    redirect_to: query.query?.redirectTo as string || '/course/chapter/1/lesson/1'
+                }
             }
         })
 

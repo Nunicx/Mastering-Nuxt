@@ -4,7 +4,6 @@
         <div class="card_info">
             <p>Nombre: {{ userName }}</p>
             <p>Email: {{ userEmail }}</p>
-            <NuxtLink to="/login">Profile</NuxtLink>
             <button id="logout" @click="supabase.auth.signOut(); navigateTo('/login')">
                 Log out
             </button>
@@ -20,12 +19,6 @@
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 
-
-// Mira en la consola del navegador
-console.log('👤 Usuario completo:', user.value);
-console.log('📦 Metadata:', user.value?.user_metadata);
-
-// Computed properties con fallbacks
 const userName = computed(() => {
     return user.value?.user_metadata?.full_name ||
         user.value?.user_metadata?.name ||
@@ -68,7 +61,6 @@ const avatarUrl = computed(() => {
         border: 1px solid #888;
     }
 
-    a,
     #logout {
         text-decoration: none;
         color: black;

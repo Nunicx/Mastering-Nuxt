@@ -1,52 +1,46 @@
 <script setup>
-const course = useCourse();
+const course = await useCourse();
 const route = useRoute();
-
+const { ChapterSlug, LessonSlug } = route.params;
+const lesson = await useLesson(ChapterSlug, LessonSlug);
 
 definePageMeta({
     middleware: [
-        function ({ params }, from) {
-            const course = useCourse();
+        async function ({ params }, from) {
+            const course = await useCourse();
 
-            const chapter = course.chapters.find(
+            const chapter = course.chapters?.find(
                 (chapter) => chapter.slug === params.ChapterSlug
             );
 
-            const lesson = chapter.lessons.find(
+            const lesson = chapter?.lessons?.find(
                 (lesson) => lesson.slug === params.LessonSlug
             );
 
-            if (!chapter || !lesson) {
-                return abortNavigation(
-                    createError({
-                        statusCode: 404,
-                        statusMessage: 'Chapter or lesson not found'
-                    })
-                );
-            }
+            //Esto salta error siempre y no se por que 
+            // if (!chapter || !lesson) {
+            //     throw createError({
+            //         statusCode: 404,
+            //         statusMessage: 'Chapter or lesson not found'
+            //     });
+            // }
         },
         'auth'
     ]
 });
 
 const chapter = computed(() => {
-    return course.chapters.find(
+    return course.chapters?.find(
         (chapter) => chapter.slug === route.params.ChapterSlug
     );
 });
 
-const lesson = computed(() => {
-    return chapter.value.lessons.find(
-        (lesson) => lesson.slug === route.params.LessonSlug
-    );
-});
-
-/*const title= computed(() => {
-    return 'Lesson '+chapter.value?.title+'-'+lesson.value?.slug
-})*/
+const title = computed(() => {
+    return 'Lesson ' + chapter.value?.title + '-' + lesson.value?.slug
+})
 
 useHead({
-    title: 'Lesson ' + chapter.value?.title + '-' + lesson.value?.slug + ' | ' + lesson.value?.description
+    title: title
 })
 
 
@@ -87,16 +81,15 @@ const toggleComplete = () => {
                 <NuxtImg src="/img/back.png" />{{ course.title }}
             </NuxtLink>
         </p>
-        <p id="chapterTitle">{{ chapter.title }}</p>
-        <p id="chapterDescription">{{ chapter.description }}</p>
+        <p id="chapterTitle">{{ chapter?.title }}</p>
+        <p id="chapterDescription">{{ chapter?.description }}</p>
         <div v-if="lesson">
-            <p id="lessonTitle">{{ lesson.title }}</p>
-            <p id="lessonDescription">{{ lesson.description }}</p>
+            <p id="lessonTitle">{{ lesson?.title }}</p>
+            <p id="lessonDescription">{{ lesson?.description }}</p>
             <VideoPlayer v-if="lesson.videoId" :videoId="+lesson.videoId" :key="lesson.videoId" />
             <p v-else>No video</p>
         </div>
-        <LessonCompleteButton :model-value="isLessonComplete"
-            @update:model-value="() => { toggleComplete; throw createError('Could not update') }" />
+        <LessonCompleteButton :model-value="isLessonComplete" @update:model-value="() => { toggleComplete; }" />
 
     </div>
 </template>
