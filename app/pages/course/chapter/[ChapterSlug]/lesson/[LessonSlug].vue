@@ -1,8 +1,19 @@
 <script setup>
+import { useCourseProgress } from '@/stores/courseProgress';
+import { SupabaseClient } from '@supabase/supabase-js';
+import back from "@/assets/images/back.png";
 const course = await useCourse();
 const route = useRoute();
 const { ChapterSlug, LessonSlug } = route.params;
 const lesson = await useLesson(ChapterSlug, LessonSlug);
+const store = useCourseProgress();
+const user = useSupabaseUser();
+const { initialize, toggleComplete} = store;
+const isCompleted = store.isCompleted;
+
+initialize();
+
+  const isLessonCompleted = isCompleted(ChapterSlug, LessonSlug);
 
 definePageMeta({
     middleware: [
@@ -44,24 +55,6 @@ useHead({
 })
 
 
-// El curso lo explicaba con un array y no me salía, asi que lo hice con un objeto:
-const progress = useLocalStorage('progress', {});                       //Almacenamos en localStorage el progreso en un objeto
-
-const lessonKey = computed(() => {
-    return `${chapter.value?.slug}-${lesson.value?.slug}`;      //Almacenamos la llave de la leccion como chapter-slug - lesson-slug 
-});
-
-const isLessonComplete = computed(() => {
-    return progress.value[lessonKey.value] || false;            //Comprobamos si la leccion está completa
-});
-
-const toggleComplete = () => {
-    progress.value = {
-        ...progress.value,
-        [lessonKey.value]: !isLessonComplete.value              //Actualizamos el progreso de la leccion
-    };
-};
-
 //Vueuse para localStorage:
 // npm i @vueuse/nuxt @vueuse/core
 
@@ -78,7 +71,7 @@ const toggleComplete = () => {
     <div id="lesson_wrapper">
         <p id="courseTitle">
             <NuxtLink to="/course">
-                <NuxtImg src="/img/back.png" />{{ course.title }}
+                <img :src="back" />{{ course.title }}
             </NuxtLink>
         </p>
         <p id="chapterTitle">{{ chapter?.title }}</p>
@@ -89,7 +82,7 @@ const toggleComplete = () => {
             <VideoPlayer v-if="lesson.videoId" :videoId="+lesson.videoId" :key="lesson.videoId" />
             <p v-else>No video</p>
         </div>
-        <LessonCompleteButton :model-value="isLessonComplete" @update:model-value="() => { toggleComplete; }" />
+        <LessonCompleteButton v-if="user" :model-value="isLessonCompleted" @update:model-value="() => { toggleComplete(ChapterSlug, LessonSlug); }" />
 
     </div>
 </template>

@@ -1,6 +1,7 @@
 <script setup>
 const user = useSupabaseUser()
-const title = "Home"
+const course = await useCourse();
+const title = course.value?.title
 definePageMeta({
   layout: "default"
 })
@@ -10,9 +11,10 @@ const firstLesson = await useFirstLesson();
 <template>
   <div class="welcome_container">
     <h1>{{ title }}</h1>
-    <p>Bienvenido a mi página con Nuxt</p>
+    <p>Bienvenido a nuestro curso "<strong>{{ title }}</strong>". Aquí no aprenderás gran cosa ya que no pone nada realmente y es el mismo video todo el rato.</p>
     <NuxtLink :to="firstLesson.path">Ir al curso</NuxtLink>
     <NuxtLink to="/login" v-if="!user">Iniciar sesión</NuxtLink>
+    <NuxtLink to="/buy">Comprar curso</NuxtLink>
   </div>
 </template>
 
@@ -30,6 +32,11 @@ const firstLesson = await useFirstLesson();
   margin: 0 auto;
   border-radius: 24px;
   transform: translateY(25%);
+  gap: 1em;
+}
+
+p{
+  max-width: 60%;
 }
 
 a {

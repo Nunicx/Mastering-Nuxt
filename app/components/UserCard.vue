@@ -10,9 +10,6 @@
         </div>
 
     </div>
-    <div v-else>
-        <p>No hay usuario autenticado</p>
-    </div>
 </template>
 
 <script setup lang="ts">

@@ -1,6 +1,7 @@
 <script setup>
 const firstLesson = await useFirstLesson();
 const course = await useCourse();
+import back from '@/assets/images/back.png';
 // definePageMeta({
 //     layout: 'default',
 // })
@@ -17,7 +18,7 @@ const resetError = async (error) => {
     <div class="all_course_wrapper">
         <UserCard />
         <NuxtLink to="/" id="go_back">
-            <NuxtImg src="/img/back.png" />{{ course.title }}
+            <img :src="back" />{{ course.title }}
         </NuxtLink>
         <h1>Course: <strong>{{ course.title }}</strong></h1>
         <div id="content">
